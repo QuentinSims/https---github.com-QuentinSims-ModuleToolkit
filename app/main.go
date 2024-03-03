@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	var tools toolkit.tools
+	var tools toolkit.Tools
 
 	s := tools.RandomString(10)
 	fmt.Println("Random string:", s)
