@@ -91,7 +91,7 @@ type UploadedFile struct {
 // It takes a multipart.FileHeader representing the uploaded file, the directory to which the file will be saved,
 // and a boolean flag indicating whether to rename the file.
 // It returns an UploadedFile pointer representing the uploaded file and an error if any occurred during the handling process.
-func handleUploadedFile(hdr *multipart.FileHeader, uploadDir string, renameFile bool) (*UploadedFile, error) {
+func handleUploadedFile(t *Tools, hdr *multipart.FileHeader, uploadDir string, renameFile bool) (*UploadedFile, error) {
 	var uploadedFile UploadedFile
 
 	// Open the uploaded file
@@ -193,7 +193,7 @@ func (t *Tools) UploadFiles(r *http.Request, uploadDir string, rename ...bool) (
 	for _, fHeaders := range r.MultipartForm.File {
 		for _, hdr := range fHeaders {
 			// Handle the uploaded file using the helper function
-			uploadedFile, err := handleUploadedFile(hdr, uploadDir, renameFile)
+			uploadedFile, err := handleUploadedFile(t, hdr, uploadDir, renameFile)
 			if err != nil {
 				return uploadedFiles, err
 			}
