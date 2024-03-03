@@ -87,6 +87,25 @@ type UploadedFile struct {
 	FileSize         int64
 }
 
+// UploadOneFile is a method of the Tools struct responsible for handling one uploaded file.
+// It takes an *http.Request containing the uploaded file, the directory to which the file will be saved,
+// and an optional boolean flag indicating whether to rename the file.
+// It returns a slice of UploadedFile pointers representing the uploaded file and an error if any occurred during the handling process.
+func (t *Tools) UploadOneFile(r *http.Request, uploadDir string, rename ...bool) (*UploadedFile, error) {
+	renameFile := true
+
+	if len(rename) > 0 {
+		renameFile = rename[0]
+	}
+
+	files, err := t.UploadFiles(r, uploadDir, renameFile)
+	if err != nil {
+		return nil, err
+	}
+
+	return files[0], nil
+}
+
 // handleUploadedFile is a helper function responsible for handling an individual uploaded file.
 // It takes a multipart.FileHeader representing the uploaded file, the directory to which the file will be saved,
 // and a boolean flag indicating whether to rename the file.
