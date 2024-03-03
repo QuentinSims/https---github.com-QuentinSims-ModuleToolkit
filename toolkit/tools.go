@@ -147,6 +147,8 @@ func handleUploadedFile(t *Tools, hdr *multipart.FileHeader, uploadDir string, r
 		uploadedFile.NewFileName = hdr.Filename
 	}
 
+	uploadedFile.OriginalFileName = hdr.Filename
+
 	// Create the output file in the specified upload directory
 	var outfile *os.File
 	defer outfile.Close()
