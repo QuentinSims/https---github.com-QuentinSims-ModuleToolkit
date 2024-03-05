@@ -3,13 +3,13 @@ package jsonparser
 import "testing"
 
 func TestJsonEmptyorNil_handleParseObject(t *testing.T) {
-	emptyString := ""
-	expectedErrorMessage := "not valid json, jusr an empty string"
+	var emptyString []byte
+	expectedErrorMessage := "valid json, but empty"
 
 	result, err := handleParseObject(emptyString)
 
-	if result != "" {
-		t.Errorf("Expected empty string as result, got: %s", result)
+	if result {
+		t.Errorf("Expected true: %s", result)
 	}
 
 	if err == nil {

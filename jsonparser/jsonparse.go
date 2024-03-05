@@ -5,12 +5,11 @@ import "errors"
 type Json struct {
 }
 
-func handleParseObject(j string) (string, error) {
-	if j == "" {
-		myError := errors.New("not valid json, jusr an empty string")
-		return "", myError
+func handleParseObject(jsonData []byte) (bool, error) {
+	if len(jsonData) == 0 {
+		myError := errors.New("valid json, but empty")
+		return false, myError
 	}
 
-	var abcd string
-	return string(abcd), nil
+	return true, nil
 }
