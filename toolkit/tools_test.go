@@ -1,11 +1,13 @@
 package toolkit
 
 import (
+	"bytes"
 	"fmt"
 	"image"
 	"image/png"
 	"io"
 	"mime/multipart"
+	"net/http"
 	"net/http/httptest"
 	"os"
 	"sync"
@@ -103,5 +105,49 @@ func TestTools_UploadFiles(t *testing.T) {
 
 		wg.Wait()
 
+	}
+}
+
+var jsonTests = []struct {
+	name          string
+	json          string
+	errorExpected bool
+	maxSize       int
+	allowUnknown  bool
+}{
+	{name: "good json", json: `{"Quentin": "Sims"}`, errorExpected: false, maxSize: 1024, allowUnknown: false},
+}
+
+func TestTools_ReadJSON(t *testing.T) {
+
+	var testTool Tools
+
+	for _, e := range jsonTests {
+		testTool.MaxJSONSize = e.maxSize
+
+		testTool.AllowUnkownFields = e.allowUnknown
+
+		var decodedJson struct {
+			Quentin string `json:"Quentin"`
+		}
+
+		req, err := http.NewRequest("POST", "/", bytes.NewReader([]byte(e.json)))
+		if err != nil {
+			t.Log("Error: ", err)
+		}
+
+		rr := httptest.NewRecorder()
+
+		err = testTool.ReadJSON(rr, req, &decodedJson)
+
+		if e.errorExpected && err == nil {
+			t.Errorf("%s:error expected, but none received", e.name)
+		}
+
+		if !e.errorExpected && err != nil {
+			t.Errorf("%s:error not expected, but none received: %s", e.name, err.Error())
+		}
+
+		req.Body.Close()
 	}
 }
